@@ -26,10 +26,10 @@ Packages are organized by first letter of package name:
 - **Library packages** (lib*): First 4 characters determine subdirectory
   - Example: `liblqr-1-0_0.4.2-2.1_arm64.deb` → `pool/main/libl/liblqr-1-0/`
 
-- **Special case: libX/ fallback**
-  - Some packages (e.g., `xsltproc`) are under `libx/` instead of `x/`
-  - If not found in normal path, try `lib{first_letter}/` subdirectory
-  - Example: `xsltproc` → try `x/` first, then `libx/`
+- **Fallback search**: If package not found in normal paths
+  - Try `lib{first_letter}/{package}/` (e.g., `libx/xsltproc/`)
+  - If still not found, **search all `libxxxxx/` directories** for the package
+  - Example: `xsltproc` → found in `libx/libxslt/` (not `libx/xsltproc/`)
 
 ## Supported Architectures
 
@@ -78,9 +78,12 @@ ukui-notebook=3.2.0.1-0k2.16
 For each package:
 1. Parse package name and version from input file
 2. For each architecture (arm64, amd64, loongarch64, sw64):
-   - Construct the download URL based on package naming convention
-   - First try: `{first_letter}/{package}/` (e.g., `x/xsltproc/`)
-   - If not found, try: `lib{first_letter}/{package}/` (e.g., `libx/xsltproc/`)
+   - **Step 1**: Try normal path `{first_letter}/{package}/` (e.g., `x/xsltproc/`)
+   - **Step 2**: Try `lib{first_letter}/{package}/` (e.g., `libx/xsltproc/`)
+   - **Step 3**: If still not found, **search all `libxxxxx/` directories** for the package
+     - Get directory listing of `{pool}/lib*/`
+     - Search through each `libxxxxx/` subdirectory for the package
+     - This finds packages like `xsltproc` in `libx/libxslt/`
    - Attempt to download from both `main` and `universe` pools
    - Save to output directory (default: `/root/deb/`)
 
