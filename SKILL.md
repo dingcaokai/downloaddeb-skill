@@ -36,7 +36,21 @@ Download packages for all 4 architectures:
 
 ## Input Format
 
-The user will provide a text file with packages to download. Each line should contain:
+The user will provide a text file with packages to download. **Two formats are supported:**
+
+### Format 1: Full deb filename (Recommended)
+```
+package_name_version_architecture.deb
+```
+
+Example:
+```
+ukui-notebook_3.2.0.1-0k2.16_arm64.deb
+liblqr-1-0_0.4.2-2.1_amd64.deb
+aisleriot_1%3a3.22.9-1_arm64.deb
+```
+
+### Format 2: Package name and version
 ```
 package_name=version
 ```
@@ -47,6 +61,8 @@ aisleriot=1:3.22.9-1
 gomoku.app=1.2.9-4build1
 ukui-notebook=3.2.0.1-0k2.16
 ```
+
+**Note**: When using Format 1 (full filename), the skill will extract architecture from the filename and only download that specific architecture. When using Format 2, the skill will download all 4 architectures.
 
 ## Download Process
 
