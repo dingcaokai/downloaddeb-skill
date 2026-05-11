@@ -73,18 +73,34 @@ ukui-notebook=3.2.0.1-0k2.16
 
 **两种格式都会下载所有 4 个架构**：arm64、amd64、loongarch64、sw64
 
+## URL Encoding
+
+**重要**: 版本号中的特殊字符需要 URL 编码才能正确下载：
+
+| 字符 | 编码 | 示例 |
+|------|------|------|
+| `+` | `%2B` | `1.1.34-4kylin0.20.04.3+esm1` → `1.1.34-4kylin0.20.04.3%2Besm1` |
+| `%` | `%25` | `1%3a3.22.9-1` → `1%253a3.22.9-1` |
+| ` ` (space) | `%20` | 或使用 `+` 代替 |
+
+**自动处理规则**：
+- 在构建下载 URL 时，自动对版本号进行 URL 编码
+- 使用 `curl --data-urlencode` 或手动替换特殊字符
+- 常见需要编码的字符：`+` → `%2B`, `%` → `%25`, ` ` → `%20`, `#` → `%23`
+
 ## Download Process
 
 For each package:
 1. Parse package name and version from input file
-2. For each architecture (arm64, amd64, loongarch64, sw64):
+2. **URL encode the version** (handle `+`, `%`, `#`, etc.)
+3. For each architecture (arm64, amd64, loongarch64, sw64):
    - **Step 1**: Try normal path `{first_letter}/{package}/` (e.g., `x/xsltproc/`)
    - **Step 2**: Try `lib{first_letter}/{package}/` (e.g., `libx/xsltproc/`)
    - **Step 3**: If still not found, **search all `libxxxxx/` directories** for the package
      - Get directory listing of `{pool}/lib*/`
      - Search through each `libxxxxx/` subdirectory for the package
      - This finds packages like `xsltproc` in `libx/libxslt/`
-   - Attempt to download from both `main` and `universe` pools
+   - Attempt to download from **all pools**: main, universe, restricted, multiverse
    - Save to output directory (default: `/root/deb/`)
 
 ## Usage
