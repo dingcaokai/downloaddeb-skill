@@ -50,6 +50,10 @@ liblqr-1-0_0.4.2-2.1_amd64.deb
 aisleriot_1%3a3.22.9-1_arm64.deb
 ```
 
+**Format 1 解析规则**：
+- 从文件名提取包名（如 `ukui-notebook`）和版本（如 `3.2.0.1-0k2.16`）
+- **忽略文件名中的架构，下载所有 4 个架构**
+
 ### Format 2: Package name and version
 ```
 package_name=version
@@ -62,7 +66,7 @@ gomoku.app=1.2.9-4build1
 ukui-notebook=3.2.0.1-0k2.16
 ```
 
-**Note**: When using Format 1 (full filename), the skill will extract architecture from the filename and only download that specific architecture. When using Format 2, the skill will download all 4 architectures.
+**两种格式都会下载所有 4 个架构**：arm64、amd64、loongarch64、sw64
 
 ## Download Process
 
