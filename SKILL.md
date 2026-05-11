@@ -26,6 +26,11 @@ Packages are organized by first letter of package name:
 - **Library packages** (lib*): First 4 characters determine subdirectory
   - Example: `liblqr-1-0_0.4.2-2.1_arm64.deb` → `pool/main/libl/liblqr-1-0/`
 
+- **Special case: libX/ fallback**
+  - Some packages (e.g., `xsltproc`) are under `libx/` instead of `x/`
+  - If not found in normal path, try `lib{first_letter}/` subdirectory
+  - Example: `xsltproc` → try `x/` first, then `libx/`
+
 ## Supported Architectures
 
 Download packages for all 4 architectures:
@@ -74,6 +79,8 @@ For each package:
 1. Parse package name and version from input file
 2. For each architecture (arm64, amd64, loongarch64, sw64):
    - Construct the download URL based on package naming convention
+   - First try: `{first_letter}/{package}/` (e.g., `x/xsltproc/`)
+   - If not found, try: `lib{first_letter}/{package}/` (e.g., `libx/xsltproc/`)
    - Attempt to download from both `main` and `universe` pools
    - Save to output directory (default: `/root/deb/`)
 
